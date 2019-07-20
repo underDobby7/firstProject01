@@ -1,0 +1,193 @@
+@charset "utf-8";
+
+/* 전체 기본 */
+
+* {
+	margin: 0px;
+	padding: 0px;
+}
+body {
+	height: 100%;
+	width: 100%;
+}
+ul, ol {
+	list-style: none;
+}
+a {
+	text-decoration: none;
+	color: #333333;
+}
+
+/* 큰틀 (헤더와 풋터는 나중에 삭제하기/임시자료임)*/
+
+.header { min-height: 150px; width: auto; background-color: #d5d5d5; }
+
+.footer { min-height: 150px; width: auto; background-color: #d5d5d5;}
+
+.container {
+	height: 660px;
+	width: auto;
+	min-width: 1100px;
+	margin: 0px 60px;
+}
+.container:after {
+	content: '';
+	display: block;
+	clear: both;
+	float: none;
+}
+.side_bar {
+	height: 100%;
+	width: 200px;
+	float: left;
+}
+.main_content {
+	padding: 30px 30px 0 30px;
+	height: 95.5%;
+	width: auto;
+	float: left;
+}
+
+/* 사이드바 세부 */
+
+h2 {
+	height: 150px;
+	line-height: 150px;
+	text-align: center;
+	font-size:15px;
+	color:#0b5823;
+	background-color:#e6f8ec;
+	border-bottom: 1px solid #d0e1d6;
+}
+
+.side_bar ul a {
+	/* padding: 10px 0px;  */
+	display: block;
+	width: auto;
+	height: 40px;
+	line-height: 40px;
+	text-indent: 10px;
+	font-size: 15px;
+	border-bottom: 1px solid #d0e1d6;
+	font-weight: bold;
+	
+}
+.side_bar ul a:hover {
+	background: url(../img/arr_icon.png) no-repeat center right;
+}
+
+.navi_list li {	
+	padding-right: 8px;
+	font-size: 13px;
+	float: left;
+	background: url(../img/arr_icon_s.png) no-repeat center right;
+
+}
+.navi_list {
+	width: 100%;
+	padding: 10px 0px;
+	border-bottom: 1px solid #eee;
+}
+
+.navi_list li:nth-last-child(1) {
+	background: url(none) no-repeat center right;
+	padding-right: 0px;
+}
+
+.navi_list:after {
+	content: '';
+	display: block;
+	clear: both;
+	float: none;
+}
+
+/* 메인 세부 */
+
+.upper_tab {
+	font-size: 12px;
+	padding: 20px 0px 5px 0px;
+}
+
+table {
+	border-top: 2px solid #e6f8ec;
+	
+}
+table th {
+	font-size: 13px;
+	border-bottom: 1px solid #eee;
+	text-align: center;
+	width: 110px;
+	height: 48px;
+
+}
+table th:nth-child(1) {
+	width: 48px;
+}
+
+table th:nth-child(2) {
+	width: 510px;
+}
+
+table td {
+	height: 48px;
+	font-size: 13px;
+	font: normal;
+	border-bottom: 1px solid #eee;
+	text-align: center;
+
+}
+
+table td:nth-child(2) {
+	text-align: left;
+	text-indent: 10px;
+}
+
+table tr td a:hover {
+	font-weight: bold;
+	color: : #089634;
+	text-decoration: underline;
+
+
+}
+
+.page_transfer_navi {
+	padding-top: 15px;
+	text-align: center;
+	height: 25px;
+	
+}
+
+.page_transfer_navi img {
+	vertical-align: middle;
+}
+
+.page_transfer_navi a {
+	font-size: 13px;
+	height: 25px;
+	line-height: 25px;
+}
+
+.search_navi {
+	text-align: right;
+	height: 30px;
+}
+
+.search_navi select {
+	height: 25px;
+	vertical-align: middle;
+}
+
+.search_text {
+	height: 21px;
+	vertical-align: middle;
+}
+
+.search_btn {
+	height: 26px;
+	width: 25px;
+	vertical-align: middle;
+	background: url(../img/btn_search_text_icon.png) no-repeat center right;
+	background-color: #000;
+	border-radius: 5px;
+	cursor: pointer;
+}
