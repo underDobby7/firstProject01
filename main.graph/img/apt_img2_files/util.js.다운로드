@@ -1,0 +1,1601 @@
+//select box choice
+function choiceSelectBox(objNm, value) {
+
+	$('select[name='+objNm+']').find('option').each(function() {			
+ 			if($(this).val() == value) {
+ 				$(this).prop("selected", true); 				
+ 			}else {
+ 				$(this).prop("selected", false);	      
+ 			}
+	});
+}
+
+//select box choice - 도로명용
+function choiceSelectBox1(objNm, value) {
+
+	$('select[name='+objNm+']').find('option').each(function() {			
+ 			if($(this).val() == value) {
+ 				$(this).prop("selected", true); 				
+ 			}else {
+ 				$(this).prop("selected", false);	      
+ 			}
+	});
+	idxLoading();
+	if($('select[name=chosung] option:selected').val() != "") {				
+		setTimeout(function() {
+			searchRoadName();	
+		}, 500);
+	}
+}
+
+//select box choice - 도로명용
+function choiceSelectBox2(objNm, value, menuGubun) {
+
+	$('select[name='+objNm+']').find('option').each(function() {			
+ 			if($(this).val() == value) {
+ 				$(this).prop("selected", true); 				
+ 			}else {
+ 				$(this).prop("selected", false);	      
+ 			}
+	});
+	idxLoading();
+	if($('select[name=roadCode] option:selected').val() != "" && menuGubun != "C"&&menuGubun != "H") {		
+		setTimeout(function() {
+			searchDanji();	
+		}, 500);
+	}
+}
+
+// select box init
+function initSelectBox(objNm) {
+	
+	$('select[name='+objNm+']').find('option').each(function() {
+ 			if($(this).val() != "") {
+ 				$(this).remove();	      				
+ 			}
+	});		
+}
+
+// main용
+function idxLoading() {	
+	var searchBoxW = $('#idxLayer').css("width");
+	var searchBoxH = $('#idxLayer').css("height");		
+	$('#idxLoadingBar').css({'width' : searchBoxW, 'height': searchBoxH});
+	$('#idxLoadingBar').show();	
+}
+
+function idxUnLoading() {		
+	$('#idxLoadingBar').fadeOut(100);
+}
+
+
+// 검색페이지용
+function loading() {		
+	var searchBoxW = $('.search_box').css("width");
+	var searchBoxH = $('.search_box').css("height");		
+	$('#loadingBar').css({'width' : searchBoxW, 'height': searchBoxH});
+	$('#loadingBar').show();		
+}
+
+function unloading() {	
+	$('#loadingBar').fadeOut(100);
+}
+
+// 상세페이지용
+function dtlloading() {	
+	var searchBoxW = $('.search_box').css("width");
+	var searchBoxH = $('.search_box').css("height");		
+	$('#loadingBar').css({'width' : searchBoxW, 'height': searchBoxH});
+	$('#loadingBar').show();	
+}
+
+function dtlUnloading() {		
+	$('#loadingBar').fadeOut(100);	
+}
+
+function popClose() {
+	window.close();
+}
+
+//var last_day1 	= new Array("31", "28", "31", "30", "31", "30", "31", "31", "30", "31", "30", "31");
+//var last_day2	= new Array("31", "29", "31", "30", "31", "30", "31", "31", "30", "31", "30", "31");
+
+function peroidMonthDays(month, days) {
+		
+	var period 		= "";
+	//var dd 			= 0;
+	//var srhYear 	= $('select[name=srhYear] option:selected').val();
+		
+	//dd = parseInt(days, 10);
+	
+	//if(dd > 0 && dd <= 10) {
+	//	period = "01~10";
+	//}
+	//else if(dd > 10 && dd <= 20) {
+	//	period = "11~20";
+	//} 
+	//else {
+	//	if(month == 2) {
+			// 년도가 400으로 나누어 떨어지거나, 4의배수이고 100으로 나누어 떨어지지 않으면 윤년!
+	//		if((srhYear % 4 == 0 && srhYear % 100 != 0) || (srhYear % 400 == 0)) { 
+	//			period = "21~" + last_day2[month - 1];
+	//		}
+	//		else{
+	//			period = "21~" + last_day1[month - 1];
+	//		}			
+	//	}
+	//	else {
+	//		period = "21~" + last_day1[month - 1];
+	//	}		
+	//}
+	
+	period = days;
+	return period;
+		
+}
+
+//숫자체크
+function isNumber(ch) {
+	return $.isNumeric(ch);
+}
+
+function isNull(ch) {
+	var val = "";
+	if(ch == null || ch == "null") {
+		val = "";
+	}
+	else {
+		val = ch;
+	}
+	return val;
+}
+
+//단위 한글변환
+function changeHangul(val) {
+   	
+	var hanA = new Array("","일","이","삼","사","오","육","칠","팔","구","십");
+ 	var danA = new Array("", "십", "백","천","","십","백","천","","십","백","천");
+ 	var result = "";       	
+ 	var chk = false;  
+ 	
+ 	if(val != "" && val != null) {
+ 		if(isNumber(val)) {
+ 			
+ 			var intVal = parseInt(val, 10);
+ 			val = '' + intVal;
+ 			for(var i=0; i<val.length; i++) {
+ 				str = "";
+ 				han = hanA[val.charAt(val.length-(i+1))];
+ 				if(han != "") str = han+danA[i];
+ 				if(i < 4) {
+ 					if(han != "") chk = true;
+ 				}
+ 				if(i == 4) str += "억 ";
+ 				if(i == 8) str += "조 ";
+ 				result = str + result;
+ 			}
+ 		}
+ 		if(chk) {
+ 			result = result + "만";
+ 		}     
+ 	}		
+ 	return result;
+}	
+
+function getBobn(val) {
+	var bobn = "";
+	
+	if(val == "" || val == null) {
+		bobn = "";
+	}
+	else {
+		if(isNumber(val)) {			
+			bobn = "" + parseInt(val, 10);
+			if(bobn == "0") {
+				bobn = "";
+			}
+		}
+		else {
+			bobn = val;
+		}
+	}
+	return bobn;
+}
+
+function getBubn(val) {
+	var bubn = "";
+	
+	if(val == "" || val == null) {
+		bubn = "";
+	}
+	else {
+		if(isNumber(val)) {
+			bubn = "-" + parseInt(val, 10);
+			if(bubn == "-0") {
+				bubn = "";
+			}
+		}
+		else {
+			bubn = "-" + val;
+		}
+	}
+	
+	return bubn;
+}
+
+function getMapPNU(val) {
+	
+	var vals = '';
+	
+	if(val == "" || val == null) {
+		vals = "";
+	}
+	else {
+		if(isNumber(val)) {
+			if(parseInt(val, 10) == 0) {
+				vals = '';
+			}else {
+				vals = '' + parseInt(val, 10);
+			}			
+		}
+		else {
+			vals = val;
+		}
+	}
+	return vals;
+}
+
+function getFloor(val) {
+	var floor = "";
+	if(val != "" && val != null) {		
+		if(val == "0") {
+			floor = "";
+		}else {
+			floor = "<span style='width:24px;display:inline-block;'>(" + val + ")</span>";	
+		}			
+	}
+	else {
+		floor = "<span style='width:24px;display:inline-block;'>&nbsp;</span>";
+	}
+	return floor;
+}
+
+function getMoney(val) {
+	var money = "";
+	if(val != "0") {
+		money = val;
+	}
+	return money;
+}
+
+function getRentMoney(val) {
+	var money = "";
+	if(val != "0") {
+		money = "<span style='width:24px;display:inline-block;'>&nbsp;</span><br /><font color='blue'>" + val + "</font>";
+	}
+	return money;
+}
+// 단독-전월세용
+function getRentMoney2(val) {
+	var money = "";
+	if(val != "0") {
+		money = "<br /><font color='blue'>" + val + "</font>";
+	}
+	return money;
+}
+
+function getRightGbn(val, gbn) {
+	var rightGbn = "";
+	if(val == "1") {
+		if(gbn == "1") {
+			rightGbn = "<span style='width:24px;display:inline-block;'>&nbsp;</span>";
+		}else {
+			rightGbn = "";
+		}
+	}else if(val == "A") {
+		if(gbn == "1") {
+			rightGbn = "<span style='width:24px;display:inline-block;'>&nbsp;</span>";
+		}else {
+			rightGbn = "";
+		}
+	}else if(val == "2") {
+		if(gbn == "1") {
+			rightGbn = "<span style='width:24px;display:inline-block;'>[입]</span>";
+		}else {
+			rightGbn = "<br /><span style='width:24px;display:inline-block;'>[입]</span>";
+		}		
+	}
+	else if(val == "B") {
+		/*if(gbn == "1") {
+			rightGbn = "<br /><span style='width:12px;'>[입(준공후)]</span>";
+		}else {
+			rightGbn = "<br /><span style='width:12px;display:inline-block;'>[입(준공후)]</span>";
+		}*/
+		if(gbn == "1") {
+			rightGbn = "<br /><span style='width:12px;'>[입]</span>";
+		}else {
+			rightGbn = "<br /><span style='width:12px;display:inline-block;'>[입]</span>";
+		}	
+	}
+	return rightGbn;
+}
+
+function getJibunGbn(val) {
+	var jibun = "";
+	if(val == "1") {
+		jibun = "<span style='width:24px;display:inline-block;font-size:9px;'>지분</span>";
+	}
+	return jibun;
+}
+
+function getBuildYear(val) {
+	var build_year = '';	
+	if(val != "" && val != null) {
+		build_year = val;
+	}	
+	return build_year;
+}
+
+function getArea(val) {
+	var area = '';
+	if(val != "" && val != null) {
+		area = val;				
+	}
+	return area;
+}
+
+//금액 셋팅
+function setFromAmt(fromObj, toObj, targetObj) {
+	
+	var fromVal = $('input[name='+fromObj+']').val();
+	var toVal 	= $('input[name='+toObj+']').val();
+	var fromValTxt = "";
+	var toValTxt = "";
+	
+	if(fromVal == "" && toVal == "") {
+		$('#'+targetObj).html("");
+	}
+	else {
+		if(fromVal != "") {
+			if(!isNumber(fromVal)) {
+				alert("금액은 숫자만 입력가능합니다.");
+				$('input[name='+fromObj+']').val('');
+			}			
+			else {
+				fromValTxt = changeHangul(fromVal) + "";
+							
+				if(toVal != "") {
+					toValTxt = " ~ " + changeHangul(toVal) + "";
+				}
+				$('#'+targetObj).html(" (" + fromValTxt + toValTxt + "원)");
+			}
+		}
+		else {
+			fromValTxt = changeHangul(fromVal) + "";
+			
+			if(toVal != "") {
+				toValTxt = " ~ " + changeHangul(toVal) + "";
+			}
+			$('#'+targetObj).html(" (" + fromValTxt + toValTxt + "원)");
+		}
+	}
+}
+
+function setToAmt(fromObj, toObj, targetObj) {
+	
+	var fromVal = $('input[name='+fromObj+']').val();
+	var toVal 	= $('input[name='+toObj+']').val();
+	var fromValTxt = "";
+	var toValTxt = "";
+	
+	if(fromVal == "" && toVal == "") {
+		$('#'+targetObj).html("");
+	}
+	else {
+		if(toVal != "") {
+			if(!isNumber(toVal)) {
+				alert("금액은 숫자만 입력가능합니다.");
+				$('input[name='+toObj+']').val('');
+			}			
+			else {
+				fromValTxt = "";
+				toValTxt = " ~ " + changeHangul(toVal) + "";
+				
+				if(fromVal != "") {
+					fromValTxt = changeHangul(fromVal) + "";
+				}
+				$('#'+targetObj).html(" (" + fromValTxt + toValTxt + "원)");
+			}
+		}
+		else {
+			fromValTxt = "";
+			toValTxt = " ~ " + changeHangul(toVal) + "";
+			
+			if(fromVal != "") {
+				fromValTxt = changeHangul(fromVal) + "";
+			}
+			$('#'+targetObj).html(" (" + fromValTxt + toValTxt + "원)");
+		}
+	}
+}
+
+function idxTableHeader(menuGubun, srhType, houseType, srhYear, srhPeriod) {
+	
+	var header 		= "";
+	var monthList 	= [((srhPeriod * 3) - 2), ((srhPeriod * 3) - 1), ((srhPeriod * 3))];
+	
+	// 아파트, 연립다세대, 오피스텔
+	if(menuGubun == "A" || menuGubun == "B" || menuGubun == "E") {
+		
+		// 매매
+		if(houseType == "1") {				
+			
+			// 연립다세대
+			if(menuGubun == "B") {
+				header += "<colgroup>";
+				header += "	<col>";
+				header += "	<col width='65'>";
+				header += "	<col width='60'>";
+				header += "	<col width='60'>";
+				header += "	<col width='60'>";
+				header += "	<col width='90'>";
+				header += "	<col width='60'>";
+				header += "	<col width='90'>";
+				header += "	<col width='60'>";
+				header += "	<col width='90'>";
+				header += "	<col width='37'>";
+				header += "	<col width='37'>";
+				header += "</colgroup>";
+				header += "<tr>";
+				header += "	<th rowspan='2'>단지</th>";
+				header += "	<th rowspan='2'>지번</th>";
+				header += "	<th rowspan='2'>도로조건</th>";
+				header += "	<th>전용면적</th>";
+				header += "	<th colspan='2'>" + monthList[0] + "월</th>";
+				header += "	<th colspan='2'>" + monthList[1] + "월</th>";
+				header += "	<th colspan='2'>" + monthList[2] + "월</th>";
+				header += "	<th rowspan='2'>건축<br/>년도</th>";
+				header += "	<th rowspan='2'>전산<br/>공부</th>";
+				header += "</tr>";
+				header += "<tr>";
+				header += "	<th>대지면적</th>";
+				header += "	<th>계약일</th>";
+				header += "	<th>거래금액(층)</th>";
+				header += "	<th>계약일</th>";
+				header += "	<th>거래금액(층)</th>";
+				header += "	<th>계약일</th>";
+				header += "	<th>거래금액(층)</th>";
+				header += "</tr>";
+			}
+			// 아파트, 오피스텔
+			else {
+				header += "<colgroup>";
+				header += "	<col>";
+				header += "	<col width='55'>";
+				header += "	<col width='60'>";
+				header += "	<col width='50'>";
+				header += "	<col width='60'>";
+				header += "	<col width='90'>";
+				header += "	<col width='60'>";
+				header += "	<col width='90'>";
+				header += "	<col width='60'>";
+				header += "	<col width='90'>";
+				header += "	<col width='37'>";
+				header += "	<col width='37'>";
+				header += "</colgroup>";
+				header += "<tr>";
+				header += "	<th rowspan='2'>단지</th>";
+				header += "	<th rowspan='2'>지번</th>";
+				header += "	<th rowspan='2'>도로조건</th>";
+				header += "	<th rowspan='2'>전용<br/>면적</th>";
+				header += "	<th colspan='2'>" + monthList[0] + "월</th>";
+				header += "	<th colspan='2'>" + monthList[1] + "월</th>";
+				header += "	<th colspan='2'>" + monthList[2] + "월</th>";
+				header += "	<th rowspan='2'>건축<br/>년도</th>";
+				header += "	<th rowspan='2'>전산<br/>공부</th>";
+				header += "</tr>";
+				header += "<tr>";
+				header += "	<th>계약일</th>";
+				header += "	<th>거래금액(층)</th>";
+				header += "	<th>계약일</th>";
+				header += "	<th>거래금액(층)</th>";
+				header += "	<th>계약일</th>";
+				header += "	<th>거래금액(층)</th>";
+				header += "</tr>";
+			}
+			
+		}
+		//전월세
+		else {												
+			
+			header += "<colgroup>";
+			header += "	<col>";
+			header += "	<col width='55'>";
+			header += "	<col width='60'>";
+			header += "	<col width='50'>";
+			header += "	<col width='60'>";
+			header += "	<col width='90'>";
+			header += "	<col width='60'>";
+			header += "	<col width='90'>";
+			header += "	<col width='60'>";
+			header += "	<col width='90'>";
+			header += "	<col width='37'>";
+			header += "	<col width='37'>";
+			header += "</colgroup>";
+			header += "<tr>";
+			header += "	<th rowspan='2'>단지</th>";
+			header += "	<th rowspan='2'>지번</th>";
+			header += "	<th rowspan='2'>도로조건</th>";
+			header += "	<th rowspan='2'>전용<br/>면적</th>";
+			header += "	<th colspan='2'>" + monthList[0] + "월</th>";
+			header += "	<th colspan='2'>" + monthList[1] + "월</th>";
+			header += "	<th colspan='2'>" + monthList[2] + "월</th>";
+			header += "	<th rowspan='2'>건축<br/>년도</th>";
+			header += "	<th rowspan='2'>전산<br/>공부</th>";
+			header += "</tr>";
+			header += "<tr>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액(층)</th>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액(층)</th>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액(층)</th>";
+			header += "</tr>";
+		}
+	}
+	// 단독
+	else if(menuGubun == "C") {					
+		
+		// 매매
+		if(houseType == "1") {				
+			header += "<colgroup>";
+			header += "	<col width='58'>";
+			header += "	<col width='65'>";
+			header += "	<col width='55'>";
+			header += "	<col width='55'>";
+			header += "	<col width='55'>";
+			header += "	<col width='60'>";
+			header += "	<col width='84'>";
+			header += "	<col width='60'>";
+			header += "	<col width='84'>";
+			header += "	<col width='60'>";
+			header += "	<col width='84'>";
+			header += "	<col width='37'>";
+			header += "	<col width='37'>";
+			header += "</colgroup>";
+			header += "<tr>";
+			header += "	<th rowspan='2'>법정동</th>";
+			header += "	<th>지번</th>";
+			header += "	<th rowspan='2'>주택유형</th>";
+			header += "	<th rowspan='2'>도로조건</th>";
+			header += "	<th>연면적</th>";
+			header += "	<th colspan='2'>" + monthList[0] + "월</th>";
+			header += "	<th colspan='2'>" + monthList[1] + "월</th>";
+			header += "	<th colspan='2'>" + monthList[2] + "월</th>";
+			header += "	<th rowspan='2'>건축<br/>년도</th>";
+			header += "	<th rowspan='2'>전산<br/>공부</th>";
+			header += "</tr>";
+			header += "<tr>";
+			header += "	<th>도로명</th>";
+			header += "	<th>대지면적</th>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액</th>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액</th>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액</th>";
+			header += "</tr>";
+		}
+		// 전월세
+		else {		
+			/*header += "<colgroup>";
+			header += "	<col>";
+			header += "	<col width='90'>";
+			header += "	<col width='60'>";
+			header += "	<col width='90'>";
+			header += "	<col width='60'>";
+			header += "	<col width='90'>";
+			header += "	<col width='60'>";
+			header += "	<col width='90'>";
+			header += "	<col width='45'>";
+			header += "</colgroup>";
+			header += "<tr>";
+			header += "	<th rowspan='2'>법정동</th>";
+			header += "	<th rowspan='2'>계약<br/>면적</th>";
+			header += "	<th colspan='2'>" + monthList[0] + "월</th>";
+			header += "	<th colspan='2'>" + monthList[1] + "월</th>";
+			header += "	<th colspan='2'>" + monthList[2] + "월</th>";
+			header += "	<th rowspan='2'>건축<br/>년도</th>";
+			header += "</tr>";
+			header += "<tr>";
+			header += "	<th>계약일</th>";
+			header += "	<th>보증금<br/>월세</th>";
+			header += "	<th>계약일</th>";
+			header += "	<th>보증금<br/>월세</th>";
+			header += "	<th>계약일</th>";
+			header += "	<th>보증금<br/>월세</th>";
+			header += "</tr>";*/
+			header += "<colgroup>";
+			header += "	<col width='58'>";
+			header += "	<col width='65'>";
+			header += "	<col width='55'>";
+			header += "	<col width='55'>";
+			header += "	<col width='55'>";
+			header += "	<col width='60'>";
+			header += "	<col width='84'>";
+			header += "	<col width='60'>";
+			header += "	<col width='84'>";
+			header += "	<col width='60'>";
+			header += "	<col width='84'>";
+			header += "	<col width='37'>";
+			header += "	<col width='37'>";
+			header += "</colgroup>";
+			header += "<tr>";
+			header += "	<th rowspan='2'>법정동</th>";
+			header += "	<th>지번</th>";
+			header += "	<th rowspan='2'>주택유형</th>";
+			header += "	<th rowspan='2'>도로조건</th>";
+			header += "	<th rowspan='2'>연면적</th>";
+			header += "	<th colspan='2'>" + monthList[0] + "월</th>";
+			header += "	<th colspan='2'>" + monthList[1] + "월</th>";
+			header += "	<th colspan='2'>" + monthList[2] + "월</th>";
+			header += "	<th rowspan='2'>건축<br/>년도</th>";
+			header += "	<th rowspan='2'>전산<br/>공부</th>";
+			header += "</tr>";
+			header += "<tr>";
+			header += "	<th>도로명</th>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액</th>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액</th>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액</th>";
+			header += "</tr>";
+		}
+	}
+	// 분양권
+	else if(menuGubun == "F") {		
+		
+		// 매매
+		if(houseType == "1") {				
+			header += "<colgroup>";
+			header += "	<col>";
+			header += "	<col width='70'>";
+			header += "	<col width='50'>";
+			header += "	<col width='55'>";
+			header += "	<col width='115'>";
+			header += "	<col width='55'>";
+			header += "	<col width='115'>";
+			header += "	<col width='55'>";
+			header += "	<col width='115'>";			
+			header += "</colgroup>";
+			header += "<tr>";
+			header += "	<th rowspan='2'>단지</th>";
+			header += "	<th rowspan='2'>지번</th>";
+			header += "	<th rowspan='2'>전용<br/>면적</th>";
+			header += "	<th colspan='2'>" + monthList[0] + "월</th>";
+			header += "	<th colspan='2'>" + monthList[1] + "월</th>";
+			header += "	<th colspan='2'>" + monthList[2] + "월</th>";			
+			header += "</tr>";
+			header += "<tr>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액(층)<br />[구분]</th>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액(층)<br />[구분]</th>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액(층)<br />[구분]</th>";
+			header += "</tr>";
+		}		
+	}
+	// 토지
+	else if(menuGubun == "G") {
+		header += "<colgroup>";
+		header += "	<col width='58'>";
+		header += "	<col width='65'>";
+		header += "	<col width='105'>";
+		header += "	<col width='55'>";
+		header += "	<col width='55'>";
+		header += "	<col width='60'>";
+		header += "	<col width='84'>";
+		header += "	<col width='60'>";
+		header += "	<col width='84'>";
+		header += "	<col width='60'>";
+		header += "	<col width='84'>";
+		header += "	<col width='37'>";
+		header += "</colgroup>";
+		header += "<tr>";
+		header += "	<th rowspan='2'>법정동</th>";
+		header += "	<th rowspan='2'>지번</th>";	
+		header += "	<th>지목</th>";
+		header += "	<th rowspan='2'>도로조건</th>";
+		header += "	<th rowspan='2'>거래면적</th>";
+		header += "	<th colspan='2'>" + monthList[0] + "월</th>";
+		header += "	<th colspan='2'>" + monthList[1] + "월</th>";
+		header += "	<th colspan='2'>" + monthList[2] + "월</th>";
+		header += "	<th rowspan='2'>전산<br/>공부</th>";
+		header += "</tr>";
+		header += "<tr>";
+		header += "	<th>용도지역</th>";
+		header += "	<th>계약일</th>";
+//		header += "	<th>거래<br />면적</th>";		
+		header += "	<th>거래금액</th>";
+		header += "	<th>계약일</th>";
+//		header += "	<th>거래<br />면적</th>";		
+		header += "	<th>거래금액</th>";
+		header += "	<th>계약일</th>";
+//		header += "	<th>거래<br />면적</th>";		
+		header += "	<th>거래금액</th>";
+		header += "</tr>";
+	}
+	//상업/업무용
+	else if(menuGubun == "H") {
+		
+		header += "<colgroup>";
+		header += "	<col width='58'>";
+		header += "	<col width='37'>";
+//		header += "	<col width='90'>";
+		header += "	<col width='65'>";
+//		header += "	<col width='90'>";
+//		header += "	<col width='90'>";
+		header += "	<col width='90'>";
+		header += "	<col width='37'>";
+		header += "	<col width='85'>";	
+		header += "	<col width='64'>";
+		header += "	<col width='84'>";
+		header += "	<col width='64'>";
+		header += "	<col width='84'>";
+		header += "	<col width='64'>";
+		header += "	<col width='84'>";
+//		header += "	<col width='80'>";
+		header += "	<col width='37'>";
+		header += "	<col width='37'>";
+		header += "</colgroup>";
+		header += "<tr>";
+		header += "	<th rowspan='2'>법정동</th>";
+		header += "	<th rowspan='2'>유형</th>";
+		header += "	<th>지번</th>";
+		header += "	<th>용도지역</th>";
+		header += "	<th rowspan='2'>도로<br/>조건</th>";
+		header += "	<th>전용/연면적</th>";
+		
+
+		header += "	<th colspan='2'>" + monthList[0] + "월</th>";
+		header += "	<th colspan='2'>" + monthList[1] + "월</th>";
+		header += "	<th colspan='2'>" + monthList[2] + "월</th>";
+		header += "	<th rowspan='2'>건축<br/>년도</th>";
+		header += "	<th rowspan='2'>전산<br/>공부</th>";
+		//header += "	<th rowspan='2'>건축<br/>년도</th>";
+		header += "</tr>";
+		header += "<tr>";
+		header += "	<th>도로명</th>";
+		header += "	<th>주용도</th>";
+		header += "	<th>대지면적</th>";
+		header += "	<th>계약일</th>";
+		header += "	<th>거래금액(층)</th>";
+		header += "	<th>계약일</th>";
+		header += "	<th>거래금액(층)</th>";
+		header += "	<th>계약일</th>";
+		header += "	<th>거래금액(층)</th>";
+		header += "</tr>";
+	}
+		
+	return header;
+}
+
+function tableHeader(menuGubun, srhType, houseType, srhYear, srhPeriod) {
+	
+	var header 		= "";	
+	var monthList = [((srhPeriod * 3) - 2), ((srhPeriod * 3) - 1), ((srhPeriod * 3))];
+		
+	// 아파트, 연립다세대, 오피스텔
+	if(menuGubun == "A" || menuGubun == "B" || menuGubun == "E") {
+			
+		// 매매
+		if(houseType == "1") {				
+				
+			// 연립다세대
+			if(menuGubun == "B") {
+				header += "<colgroup>";
+				header += "	<col>";
+				header += "	<col width='65'>";
+				header += "	<col width='60'>";
+				header += "	<col width='60'>";
+				header += "	<col width='60'>";
+				header += "	<col width='90'>";
+				header += "	<col width='60'>";
+				header += "	<col width='90'>";
+				header += "	<col width='60'>";
+				header += "	<col width='90'>";
+				header += "	<col width='37'>";
+				header += "	<col width='37'>";
+				header += "</colgroup>";
+				header += "<tr>";
+				header += "	<th rowspan='2'>단지</th>";
+				header += "	<th rowspan='2'>지번</th>";
+				header += "	<th rowspan='2'>도로조건</th>";
+				header += "	<th>전용면적</th>";
+				header += "	<th colspan='2'>" + monthList[0] + "월</th>";
+				header += "	<th colspan='2'>" + monthList[1] + "월</th>";
+				header += "	<th colspan='2'>" + monthList[2] + "월</th>";
+				header += "	<th rowspan='2'>건축<br/>년도</th>";
+				header += "	<th rowspan='2'>전산<br/>공부</th>";
+				header += "</tr>";
+				header += "<tr>";
+				header += "	<th>대지면적</th>";
+				header += "	<th>계약일</th>";
+				header += "	<th>거래금액(층)</th>";
+				header += "	<th>계약일</th>";
+				header += "	<th>거래금액(층)</th>";
+				header += "	<th>계약일</th>";
+				header += "	<th>거래금액(층)</th>";
+				header += "</tr>";
+			}
+			// 아파트, 오피스텔
+			else {
+				header += "<colgroup>";
+				header += "	<col>";
+				header += "	<col width='55'>";
+				header += "	<col width='60'>";
+				header += "	<col width='50'>";
+				header += "	<col width='60'>";
+				header += "	<col width='90'>";
+				header += "	<col width='60'>";
+				header += "	<col width='90'>";
+				header += "	<col width='60'>";
+				header += "	<col width='90'>";
+				header += "	<col width='37'>";
+				header += "	<col width='37'>";
+				header += "</colgroup>";
+				header += "<tr>";
+				header += "	<th rowspan='2'>단지</th>";
+				header += "	<th rowspan='2'>지번</th>";
+				header += "	<th rowspan='2'>도로조건</th>";
+				header += "	<th rowspan='2'>전용<br/>면적</th>";
+				header += "	<th colspan='2'>" + monthList[0] + "월</th>";
+				header += "	<th colspan='2'>" + monthList[1] + "월</th>";
+				header += "	<th colspan='2'>" + monthList[2] + "월</th>";
+				header += "	<th rowspan='2'>건축<br/>년도</th>";
+				header += "	<th rowspan='2'>전산<br/>공부</th>";
+				header += "</tr>";
+				header += "<tr>";
+				header += "	<th>계약일</th>";
+				header += "	<th>거래금액(층)</th>";
+				header += "	<th>계약일</th>";
+				header += "	<th>거래금액(층)</th>";
+				header += "	<th>계약일</th>";
+				header += "	<th>거래금액(층)</th>";
+				header += "</tr>";
+			}
+			
+		}
+		//전월세
+		else {												
+			
+			header += "<colgroup>";
+			header += "	<col>";
+			header += "	<col width='55'>";
+			header += "	<col width='60'>";
+			header += "	<col width='50'>";
+			header += "	<col width='60'>";
+			header += "	<col width='90'>";
+			header += "	<col width='60'>";
+			header += "	<col width='90'>";
+			header += "	<col width='60'>";
+			header += "	<col width='90'>";
+			header += "	<col width='37'>";
+			header += "	<col width='37'>";
+			header += "</colgroup>";
+			header += "<tr>";
+			header += "	<th rowspan='2'>단지</th>";
+			header += "	<th rowspan='2'>지번</th>";
+			header += "	<th rowspan='2'>도로조건</th>";
+			header += "	<th rowspan='2'>전용<br/>면적</th>";
+			header += "	<th colspan='2'>" + monthList[0] + "월</th>";
+			header += "	<th colspan='2'>" + monthList[1] + "월</th>";
+			header += "	<th colspan='2'>" + monthList[2] + "월</th>";
+			header += "	<th rowspan='2'>건축<br/>년도</th>";
+			header += "	<th rowspan='2'>전산<br/>공부</th>";
+			header += "</tr>";
+			header += "<tr>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액(층)</th>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액(층)</th>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액(층)</th>";
+			header += "</tr>";
+		}
+	}
+	// 단독
+	else if(menuGubun == "C") {					
+		
+		// 매매
+		if(houseType == "1") {				
+			header += "<colgroup>";
+			header += "	<col width='58'>";
+			header += "	<col width='65'>";
+			header += "	<col width='55'>";
+			header += "	<col width='55'>";
+			header += "	<col width='55'>";
+			header += "	<col width='60'>";
+			header += "	<col width='84'>";
+			header += "	<col width='60'>";
+			header += "	<col width='84'>";
+			header += "	<col width='60'>";
+			header += "	<col width='84'>";
+			header += "	<col width='37'>";
+			header += "	<col width='37'>";
+			header += "</colgroup>";
+			header += "<tr>";
+			header += "	<th rowspan='2'>법정동</th>";
+			header += "	<th>지번</th>";
+			header += "	<th rowspan='2'>주택유형</th>";
+			header += "	<th rowspan='2'>도로조건</th>";
+			header += "	<th>연면적</th>";
+			header += "	<th colspan='2'>" + monthList[0] + "월</th>";
+			header += "	<th colspan='2'>" + monthList[1] + "월</th>";
+			header += "	<th colspan='2'>" + monthList[2] + "월</th>";
+			header += "	<th rowspan='2'>건축<br/>년도</th>";
+			header += "	<th rowspan='2'>전산<br/>공부</th>";
+			header += "</tr>";
+			header += "<tr>";
+			header += "	<th>도로명</th>";
+			header += "	<th>대지면적</th>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액</th>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액</th>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액</th>";
+			header += "</tr>";
+		}
+		// 전월세
+		else {		
+			header += "<colgroup>";
+			header += "	<col width='58'>";
+			header += "	<col width='65'>";
+			header += "	<col width='55'>";
+			header += "	<col width='55'>";
+			header += "	<col width='55'>";
+			header += "	<col width='60'>";
+			header += "	<col width='84'>";
+			header += "	<col width='60'>";
+			header += "	<col width='84'>";
+			header += "	<col width='60'>";
+			header += "	<col width='84'>";
+			header += "	<col width='37'>";
+			header += "	<col width='37'>";
+			header += "</colgroup>";
+			header += "<tr>";
+			header += "	<th rowspan='2'>법정동</th>";
+			header += "	<th>지번</th>";
+			header += "	<th rowspan='2'>주택유형</th>";
+			header += "	<th rowspan='2'>도로조건</th>";
+			header += "	<th rowspan='2'>연면적</th>";
+			header += "	<th colspan='2'>" + monthList[0] + "월</th>";
+			header += "	<th colspan='2'>" + monthList[1] + "월</th>";
+			header += "	<th colspan='2'>" + monthList[2] + "월</th>";
+			header += "	<th rowspan='2'>건축<br/>년도</th>";
+			header += "	<th rowspan='2'>전산<br/>공부</th>";
+			header += "</tr>";
+			header += "<tr>";
+			header += "	<th>도로명</th>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액</th>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액</th>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액</th>";
+			header += "</tr>";
+		}
+	}
+	// 분양권
+	else if(menuGubun == "F") {		
+		
+		// 매매
+		if(houseType == "1") {				
+			header += "<colgroup>";
+			header += "	<col>";
+			header += "	<col width='70'>";
+			header += "	<col width='50'>";
+			header += "	<col width='55'>";
+			header += "	<col width='115'>";
+			header += "	<col width='55'>";
+			header += "	<col width='115'>";
+			header += "	<col width='55'>";
+			header += "	<col width='115'>";			
+			header += "</colgroup>";
+			header += "<tr>";
+			header += "	<th rowspan='2'>단지</th>";
+			header += "	<th rowspan='2'>지번</th>";
+			header += "	<th rowspan='2'>전용<br/>면적</th>";
+			header += "	<th colspan='2'>" + monthList[0] + "월</th>";
+			header += "	<th colspan='2'>" + monthList[1] + "월</th>";
+			header += "	<th colspan='2'>" + monthList[2] + "월</th>";			
+			header += "</tr>";
+			header += "<tr>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액(층)<br />[구분]</th>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액(층)<br />[구분]</th>";
+			header += "	<th>계약일</th>";
+			header += "	<th>거래금액(층)<br />[구분]</th>";
+			header += "</tr>";
+		}		
+	}
+	// 토지
+	else if(menuGubun == "G") {
+		
+		header += "<colgroup>";
+		header += "	<col width='58'>";
+		header += "	<col width='65'>";
+		header += "	<col width='105'>";
+		header += "	<col width='55'>";
+		header += "	<col width='55'>";
+		header += "	<col width='60'>";
+		header += "	<col width='84'>";
+		header += "	<col width='60'>";
+		header += "	<col width='84'>";
+		header += "	<col width='60'>";
+		header += "	<col width='84'>";
+		header += "	<col width='37'>";
+		header += "</colgroup>";
+		header += "<tr>";
+		header += "	<th rowspan='2'>법정동</th>";
+		header += "	<th rowspan='2'>지번</th>";	
+		header += "	<th>지목</th>";
+		header += "	<th rowspan='2'>도로조건</th>";
+		header += "	<th rowspan='2'>거래면적</th>";
+		header += "	<th colspan='2'>" + monthList[0] + "월</th>";
+		header += "	<th colspan='2'>" + monthList[1] + "월</th>";
+		header += "	<th colspan='2'>" + monthList[2] + "월</th>";
+		header += "	<th rowspan='2'>전산<br/>공부</th>";
+		header += "</tr>";
+		header += "<tr>";
+		header += "	<th>용도지역</th>";
+		header += "	<th>계약일</th>";
+//		header += "	<th>거래<br />면적</th>";		
+		header += "	<th>거래금액</th>";
+		header += "	<th>계약일</th>";
+//		header += "	<th>거래<br />면적</th>";		
+		header += "	<th>거래금액</th>";
+		header += "	<th>계약일</th>";
+//		header += "	<th>거래<br />면적</th>";		
+		header += "	<th>거래금액</th>";
+		header += "</tr>";
+	}
+	//상업/업무용
+	else if(menuGubun == "H") {
+		
+		header += "<colgroup>";
+		header += "	<col>";
+		header += "	<col width='37'>";
+//		header += "	<col width='90'>";
+		header += "	<col width='65'>";
+//		header += "	<col width='90'>";
+//		header += "	<col width='90'>";
+		header += "	<col width='90'>";
+		header += "	<col width='37'>";
+		header += "	<col width='85'>";	
+		header += "	<col width='64'>";
+		header += "	<col width='84'>";
+		header += "	<col width='64'>";
+		header += "	<col width='84'>";
+		header += "	<col width='64'>";
+		header += "	<col width='84'>";
+//		header += "	<col width='80'>";
+		header += "	<col width='37'>";
+		header += "	<col width='37'>";
+		header += "</colgroup>";
+		header += "<tr>";
+		header += "	<th rowspan='2'>법정동</th>";
+		header += "	<th rowspan='2'>유형</th>";
+		header += "	<th>지번</th>";
+		header += "	<th>용도지역</th>";
+		header += "	<th rowspan='2'>도로<br/>조건</th>";
+		header += "	<th>전용/연면적</th>";
+		
+
+		header += "	<th colspan='2'>" + monthList[0] + "월</th>";
+		header += "	<th colspan='2'>" + monthList[1] + "월</th>";
+		header += "	<th colspan='2'>" + monthList[2] + "월</th>";
+		header += "	<th rowspan='2'>건축<br/>년도</th>";
+		header += "	<th rowspan='2'>전산<br/>공부</th>";
+		//header += "	<th rowspan='2'>건축<br/>년도</th>";
+		header += "</tr>";
+		header += "<tr>";
+		header += "	<th>도로명</th>";
+		header += "	<th>주용도</th>";
+		header += "	<th>대지면적</th>";
+		header += "	<th>계약일</th>";
+		header += "	<th>거래금액(층)</th>";
+		header += "	<th>계약일</th>";
+		header += "	<th>거래금액(층)</th>";
+		header += "	<th>계약일</th>";
+		header += "	<th>거래금액(층)</th>";
+		header += "</tr>";
+	}	
+	return header;
+	
+}
+
+function goPrint() {
+	
+	var sw 				= screen.width;
+	var sh 				= screen.height;
+	var w 				= 925;						// 팝업창 가로길이
+	var h 				= 600;						// 세로길이
+	var xpos 			= (sw - w) / 2; 			// 화면에 띄울 위치
+	var ypos 			= (sh - h) / 2; 			// 중앙에 띄웁니다.
+	
+	var menuGubun		= $('input[name=menuGubun]').val();		
+	var srhType			= $('input[name=srhType]').val();
+	var houseType 		= "";	
+	var srhYear			= $('select[name=srhYear] option:selected').val();		
+	var srhPeriod 		= $('select[name=srhPeriod] option:selected').val();		
+	var gubunCode		= "";		
+	var sidoCode 		= $('select[name=sidoCode] option:selected').val();	
+	var gugunCode 		= $('select[name=gugunCode] option:selected').val();
+	var dongCode		= "";
+	//var chosung			= "";
+	var roadCode		= "";
+	var danjiCode		= "";
+		
+	// 토지, 분양권은 거래유형 매매로 초기화.
+	if(menuGubun == "F" || menuGubun == "G") {
+		houseType 		= "1";
+		gubunCode		= "LAND";
+	}
+	else if(menuGubun == "H") {
+		houseType 		= "1";
+		gubunCode		= $('input:radio[name=gubunCode]:checked').val();
+	}
+	else {
+		houseType 		= $('input:radio[name=houseType]:checked').val();
+		gubunCode		= $('input:radio[name=gubunCode]:checked').val();
+	}
+	
+	// 지번구분코드에 따른 코드 셋팅
+	if(gubunCode == "LAND") {
+		dongCode		= $('select[name=dongCode] option:selected').val();
+	//	chosung			= "";
+		roadCode		= "";
+	}
+	else {
+		dongCode		= "";
+	//	chosung			= $('select[name=chosung] option:selected').val();
+		roadCode		= $('select[name=roadCode] option:selected').val();
+	}
+	
+	// 메뉴구분에 따른 단지코드 셋팅. (단독다가구, 토지)
+	if(menuGubun == "C" || menuGubun == "G") {
+		danjiCode = "";
+	}
+	else {
+		danjiCode = $('select[name=danjiCode] option:selected').val();
+	}
+		
+	var menuNm 	= "";
+		
+	if (menuGubun == 'A') {		
+		menuNm 			= "아파트";
+	} else if (menuGubun == 'B') {
+		menuNm 			= "연립/다세대";
+	} else if (menuGubun == 'C') {
+		menuNm 			= "단독/다가구";
+	} else if (menuGubun == 'E') {
+		menuNm 			= "오피스텔";
+	} else if (menuGubun == 'F') {
+		menuNm 			= "분양/입주권";
+	} else if (menuGubun == 'G') {
+		menuNm			= "토지";
+	} else if (menuGubun == 'H') {
+		menuNm			= "상업/업무용";
+	}
+	
+	var srhTypeNm	= "";
+	
+	if (srhType == 'LOC') {
+		srhTypeNm 		= "지역별";
+	} else if (srhType == 'AMT') {
+		srhTypeNm 		= "금액별";
+	} else if (srhType == 'AREA') {
+		srhTypeNm 		= "면적별";
+	} else if (srhType == 'JIMOK') {
+		srhTypeNm		= "지목별";
+	} else if(srhType == 'USE') {
+		srhTypeNm		= "용도지역별";
+	} else if (srhType == 'TOT') {
+		srhTypeNm 		= "통합조회";
+	}
+	
+	var houseTypeNm = "";
+	
+	if (houseType == '1') {
+		houseTypeNm 	= "매매";
+	} else if (houseType == '2') {
+		houseTypeNm 	= "전월세";
+	}
+	
+	var sidoCodeNm = "";
+	
+	if(sidoCode != '') {
+		sidoCodeNm 		= $('select[name=sidoCode] option:selected').text();	
+	}
+	
+	var gugunCodeNm = "";
+	
+	if(gugunCode != '') {
+		gugunCodeNm 	= $('select[name=gugunCode] option:selected').text();	
+	}
+	
+	var dongCodeNm = "";
+	
+	if(dongCode != '') {
+		dongCodeNm 		= $('select[name=dongCode] option:selected').text();	
+	}
+	
+	var roadCodeNm = "";
+	if(roadCode != '') {
+		roadCodeNm 		= $('select[name=roadCode] option:selected').text();
+	}
+		
+	var danjiCodeNm = "";
+	
+	if(danjiCode != '') {
+		danjiCodeNm 	= "[" + $('select[name=danjiCode] option:selected').text() + "]";	
+	}
+	
+	var searchNm 		= "";
+	var amtNm 			= "";
+	var areaNm			= "";
+	var jimokNm			= "";
+	var useNm			= "";
+	
+	var fromAmt1 		= "";
+	var toAmt1 			= "";
+	var fromAmt2 		= "";
+	var toAmt2			= "";
+	var fromAmt3 		= "";
+	var toAmt3 			= "";
+		
+	if(srhType == "LOC") {
+				
+		amtNm 			= "";
+		areaNm 			= "";	
+		jimokNm			= "";
+		useNm			= "";
+		
+		searchNm 		= "";
+		
+	}
+	else if(srhType == "AMT") {
+		
+		// 매매
+		if(houseType == "1") {
+			
+			fromAmt1 	= $('input[name=fromAmt1]').val();
+			toAmt1 		= $('input[name=toAmt1]').val();
+			
+			amtNm 		= "금액 : " + changeHangul(fromAmt1) + "~" + changeHangul(toAmt1) + "원";
+			
+			if(fromAmt1 == "" && toAmt1 == "") {
+				amtNm = "금액 : 전체";
+			}
+		}
+		// 전월세
+		else if(houseType == "2") {
+			
+			fromAmt2 	= $('input[name=fromAmt2]').val();
+			toAmt2 		= $('input[name=toAmt2]').val();
+			fromAmt3 	= $('input[name=fromAmt3]').val();
+			toAmt3 		= $('input[name=toAmt3]').val();
+			
+			if(fromAmt2 == "" && toAmt2 == "") {
+				amtNm = "금액 : 전체, 월세금 : " + changeHangul(fromAmt3) + "~" + changeHangul(toAmt3) + "원";
+			}
+			else if(fromAmt3 == "" && toAmt3 == "") {
+				amtNm 	= "보증금 : " + changeHangul(fromAmt2) + "~" + changeHangul(toAmt2) + "원, 월세금 : 전체";
+			}
+			else {
+				amtNm 	= "보증금 : " + changeHangul(fromAmt2) + "~" + changeHangul(toAmt2) + "원, 월세금 : " + changeHangul(fromAmt3) + "~" + changeHangul(toAmt3) + "원";
+			}
+			
+			if(fromAmt2 == "" && toAmt2 == "" && fromAmt3 == "" && toAmt3 == "") {
+				amtNm = "보증금 : 전체, 월세금 : 전체";
+			}
+						
+		}		
+		areaNm 		= "";	
+		jimokNm		= "";
+		useNm		= "";
+		
+		searchNm 	= "(" + amtNm + ")";		
+		
+	}
+	else if(srhType == "AREA") {
+		
+		amtNm 		= "";
+		areaNm 		= "면적 : " + $('select[name=areaCode] option:selected').text();
+		jimokNm		= "";
+		useNm		= "";
+		
+		searchNm 	= "(" + areaNm + ")";
+	
+	}
+	else if(srhType == "JIMOK") {
+		
+		amtNm 			= "";
+		areaNm 			= "";		
+		jimokNm			= "지목 : " + $('select[name=jimokCode] option:selected').text();
+		useNm			= "";
+		
+		searchNm 	= "(" + jimokNm + ")";
+	}
+	else if(srhType == "USE") {
+		
+		amtNm 			= "";
+		areaNm 			= "";			
+		jimokNm			= "";
+		useNm			= "용도지역 : " + $('select[name=useCode] option:selected').text();
+		if($('select[name=useSubCode] option:selected').val() != "") {
+			useNm = useNm + " > " + $('select[name=useSubCode] option:selected').text();
+		}
+		
+		searchNm 	= "(" + useNm + ")";
+	}
+	else if(srhType == "TOT") {
+		
+		// 매매
+		if(houseType == "1") {
+			
+			fromAmt1 	= $('input[name=fromAmt1]').val();
+			toAmt1 		= $('input[name=toAmt1]').val();
+			
+			amtNm 		= "금액 : " + changeHangul(fromAmt1) + "~" + changeHangul(toAmt1) + "원";
+			
+			if(fromAmt1 == "" && toAmt1 == "") {
+				amtNm = "금액 : 전체";
+			}
+			
+		}
+		// 전월세
+		else if(houseType == "2") {
+			
+			fromAmt2 	= $('input[name=fromAmt2]').val();
+			toAmt2 		= $('input[name=toAmt2]').val();
+			fromAmt3 	= $('input[name=fromAmt3]').val();
+			toAmt3 		= $('input[name=toAmt3]').val();
+			
+			if(fromAmt2 == "" && toAmt2 == "") {
+				amtNm = "금액 : 전체, 월세금 : " + changeHangul(fromAmt3) + "~" + changeHangul(toAmt3) + "원";
+			}
+			else if(fromAmt3 == "" && toAmt3 == "") {
+				amtNm 	= "보증금 : " + changeHangul(fromAmt2) + "~" + changeHangul(toAmt2) + "원, 월세금 : 전체";
+			}
+			else {
+				amtNm 	= "보증금 : " + changeHangul(fromAmt2) + "~" + changeHangul(toAmt2) + "원, 월세금 : " + changeHangul(fromAmt3) + "~" + changeHangul(toAmt3) + "원";
+			}
+						
+			if(fromAmt2 == "" && toAmt2 == "" && fromAmt3 == "" && toAmt3 == "") {
+				amtNm = "보증금 : 전체, 월세금 : 전체";
+			}
+					
+		}		
+		areaNm 		= "면적 : " + $('select[name=areaCode] option:selected').text();	
+		
+		if (menuGubun == 'G') {
+			
+			jimokNm			= "지목 : " + $('select[name=jimokCode] option:selected').text();
+			useNm			= "용도지역 : " + $('select[name=useCode] option:selected').text();
+			
+			if($('select[name=useSubCode] option:selected').val() != "") {
+				useNm = useNm + " > " + $('select[name=useSubCode] option:selected').text();
+			}
+			
+			searchNm 	= "(" + amtNm + " / " + jimokNm + " / " + useNm + ")";
+		}
+		else {
+			searchNm 	= "(" + amtNm + " / " + areaNm + ")";
+		}
+		
+	}	
+	
+	var pgetContent = document.getElementById("onPrint").innerHTML;
+	var pHeader = "";
+	
+	pHeader += "<link rel='stylesheet' href='/css/common.css' type='text/css'/>";
+	pHeader += "<script language='javascript' src='/js/util.js'></script>";	
+	//pHeader += "<body topmargin='0' oncontextmenu='return false' ondragstart='return false' onselectstart='return false'>";
+	pHeader += "<body topmargin='0'>";
+	pHeader += "<table width='905' height='100%' class='pop_basic'>";
+	pHeader += 		"<tr>";
+	pHeader += 			"<td height='40' class='pop_topbg'><span class='pop_title'>실거래가조회 결과</span></td>";
+	pHeader += 		"</tr>";
+	pHeader += 		"<tr>";
+	pHeader += 			"<td class='pop_title_01 p15'>" + menuNm + " " + srhTypeNm + " - " + houseTypeNm + "</td>";
+	pHeader += 		"</tr>";
+	pHeader += 		"<tr><td class='dot_01'></td></tr>";
+	pHeader += 		"<tr>";
+	pHeader += 			"<td valign='top' class='p15'>";
+	pHeader += 				"<table width='100%'>";
+	pHeader += 					"<tr>";
+	pHeader += 						"<td colspan='2'><img src='/images/ico_info01.gif' align='absmiddle' />";
+	if(gubunCode == "LAND") {
+		pHeader += 							danjiCodeNm + " " + sidoCodeNm + " " + gugunCodeNm + " " + dongCodeNm + " " + searchNm;
+	}else {
+		pHeader += 							danjiCodeNm + " " + sidoCodeNm + " " + gugunCodeNm + " " + roadCodeNm + " " + searchNm;
+	}	
+	pHeader += 						"</td>";	
+	pHeader += 					"</tr>";
+	pHeader += 					"<tr>";
+	pHeader += 						"<td>&nbsp;</td>";
+	if(menuGubun == "F") {
+		pHeader += 					"<td class='list_tit_02'>기준 : " + srhYear + "년 " + srhPeriod + "분기, 구분(입:입주권), 단위(면적:㎡,금액:만원)</td>";
+	} 
+	else if(menuGubun == "G") {
+		pHeader += 					"<td class='list_tit_02'>기준 : " + srhYear + "년 " + srhPeriod + "분기, 구분(지분:지분거래), 단위(면적:㎡,금액:만원)</td>";
+	}
+	else {
+		pHeader += 					"<td class='list_tit_02'>기준 : " + srhYear + "년 " + srhPeriod + "분기, 단위(면적:㎡,금액:만원)</td>";
+	}	
+	pHeader += 					"</tr>";
+	pHeader += 				"</table>";
+	pHeader += 				"<table width='878px' style='padding-top:5px;'>";
+	pHeader +=					pgetContent;
+	pHeader += 				"</table>";
+	pHeader += 				"<br />";
+	
+	var pFooter = "";
+	pFooter += 				"<table width='100%'>";
+	pFooter += 					"<tr>";
+	//pFooter += 					"<td align='center'><a style='cursor: hand;' onclick='javascript:popClose();'><img src='../images/pop/btn_close.gif' align='absmiddle'></a></td>";
+	pFooter += 						"<td>&nbsp;</td>";
+	pFooter += 					"</tr>";
+	pFooter += 				"</table>";
+	
+	pFooter += 			"</td>";
+	pFooter += 		"</tr>";
+	pFooter += "</table>";
+	pFooter += "</body>";
+		
+	var pContent = pHeader + pFooter;
+		
+	popWin = window.open("", "print", "width=" + w + ",height=" + h + ",top=" + ypos + ",left=" + xpos + ",status=yes,scrollbars=yes"); 
+	
+	popWin.document.open(); 					// 팝업창 오픈.
+	popWin.document.write(pContent); 			// 컨텐츠 작성.
+	popWin.document.close(); 					// 닫음.
+	setTimeout(function() {
+		popWin.print(); 							// 윈도우 인쇄창 띄움.
+	}, 500);
+}
+
+function detailGoPrint() {
+	
+	var sw 			= screen.width;
+	var sh 			= screen.height;
+	var w 			= 935;						// 팝업창 가로길이
+	var h 			= 600;						// 세로길이
+	var xpos 		= (sw - w) / 2; 	
+	var ypos 		= (sh - h) / 2; 	
+
+	var menuGubun	= $('input[name=menuGubun]').val();		
+	var srhType		= $('input[name=srhType]').val();
+	var houseType 	= "";	
+	var srhYear		= $('select[name=srhYear] option:selected').val();		
+	
+	var danjiName 	= $('#danjiName').text();
+	
+	var menuNm 		= "";
+		
+	if (menuGubun == 'A') {
+		houseType = $('input:radio[name=houseType]:checked').val();	
+		menuNm = "아파트";
+	} else if (menuGubun == 'B') {
+		houseType = $('input:radio[name=houseType]:checked').val();	
+		menuNm = "연립/다세대";
+	} else if (menuGubun == 'C') {
+		houseType = $('input:radio[name=houseType]:checked').val();	
+		menuNm = "단독/다가구";
+	} else if (menuGubun == 'E') {
+		houseType = $('input:radio[name=houseType]:checked').val();	
+		menuNm = "오피스텔";
+	} else if (menuGubun == 'F') {
+		houseType = "1";
+		menuNm = "분양/입주권";
+	} else if (menuGubun == 'G') {
+		houseType = "1";
+		menuNm = "토지";
+	} else if (menuGubun == 'H') {
+		houseType = "1";
+		menuNm = "상업/업무용";
+	}
+	
+	var srhTypeNm	= "";
+	
+	if (srhType == 'LOC') {
+		srhTypeNm = "지역별";
+	} else if (srhType == 'AMT') {
+		srhTypeNm = "금액별";
+	} else if (srhType == 'AREA') {
+		srhTypeNm = "면적별";
+	} else if (srhType == 'TOT') {
+		srhTypeNm = "통합조회";
+	}
+	
+	var houseTypeNm = "";
+	
+	if (houseType == '1') {
+		houseTypeNm = "매매";
+	} else if (houseType == '2') {
+		houseTypeNm = "전월세";
+	}
+		
+	var searchNm = "";	
+	
+	searchNm = "(면적 : " + $('select[name=srhArea] option:selected').text() + ")";
+	
+	var pgetContent = document.getElementById("onPrint").innerHTML;
+	var pHeader = "";
+	
+	pHeader += "<link rel='stylesheet' href='/css/common.css' type='text/css'/>";
+	pHeader += "<script language='javascript' src='/js/util.js'></script>";
+	pHeader += "<table width='925' height='100%' class='pop_basic1'>";
+	pHeader += 		"<tr>";
+	pHeader += 			"<td height='40' class='pop_topbg'><span class='pop_title'>실거래가조회 결과</span></td>";
+	pHeader += 		"</tr>";
+	pHeader += 		"<tr>";
+	pHeader += 			"<td class='pop_title_01 p15'>" + menuNm + " " + srhTypeNm + " - " + houseTypeNm + "</td>";
+	pHeader += 		"</tr>";
+	pHeader += 		"<tr>";
+	pHeader += 			"<td class='dot_01'></td>";
+	pHeader += 		"</tr>";
+	pHeader += 		"<tr>";
+	pHeader += 			"<td valign='top' class='p15'>";
+	pHeader += 				"<table width='100%'>";
+	pHeader += 					"<tr>";
+	pHeader += 						"<td style='padding-bottom:5px;' colspan='2'><img src='/images/ico_info01.gif' align='absmiddle'/>";
+	pHeader += 							danjiName + " " + searchNm;
+	pHeader += 						"</td>";	
+	pHeader += 					"</tr>";
+	pHeader += 					"<tr>";
+	pHeader += 						"<td style='padding-bottom:5px;'>&nbsp;</td>";
+	if(menuGubun == "F") {
+		pHeader += 					"<td class='list_tit_02' style='padding-bottom:5px;'>기준 : "+srhYear+"년, 구분(입:입주권), 단위(면적:㎡,금액:만원)</td>";
+	} else {
+		pHeader += 					"<td class='list_tit_02' style='padding-bottom:5px;'>기준 : "+srhYear+"년, 단위(면적:㎡,금액:만원)</td>";
+	}	
+	pHeader += 					"</tr>";
+	pHeader += 				"</table>";
+	pHeader +=				pgetContent;
+	pHeader += 				"<br />";
+		
+	var pFooter = "";
+	
+	pFooter += 				"<table width='100%'>";
+	pFooter += 					"<tr>";
+	//pFooter += 					"<td align='center'><a style='cursor: hand;' onclick='javascript:popClose();'><img src='/images/pop/btn_close.gif' align='absmiddle'></a></td>";
+	pFooter += 						"<td>&nbsp;</td>";
+	pFooter += 					"</tr>";
+	pFooter += 				"</table>";
+	pFooter += 			"</td>";
+	pFooter += 		"</tr>";
+	pFooter += "</table>";
+		
+	pContent = pHeader + pFooter;
+		
+	dtlPopWin = window.open("", "printDtl", "width=" + w + ",height=" + h + ",top=" + ypos + ",left=" + xpos + ",status=yes,scrollbars=yes"); 
+	
+	dtlPopWin.document.open(); 
+	dtlPopWin.document.write(pContent); 
+	dtlPopWin.document.close(); 
+	setTimeout(function() {
+		dtlPopWin.print();
+	}, 500);
+	
+}
+
+function goPopPrint() {
+	print();
+}

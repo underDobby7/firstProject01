@@ -1,0 +1,173 @@
+$(document).ready(function(e) {
+
+    // #. 해당 레이아웃 높이 가변적으로 조정
+    function funLoad(){
+        var Cheight = $(window).height();
+        var Cwidth = $(window).width();
+        $('.content').css({'height':Cheight -157 +'px'});
+        $('.result_content').css({'height':Cheight - 460 +'px'});
+    }
+    window.onload = funLoad;
+    window.onresize = funLoad;
+
+
+    // #. 왼쪽 사이드바 닫기
+    $(".left_toggle_btn .close").click(function(){
+
+
+
+    });
+
+    // #. 왼쪽 사이드바 열기
+    $(".left_toggle_btn").click(function(){
+            $(this).children().toggleClass('close');
+
+            if ($(this).children().hasClass("close") === true) {
+                $(this).children().animate({left:0});
+                $('#map_aside').animate({marginLeft:-320 + 'px'});
+                //$("#map_container").css("width","100%");
+                $("#map_container").animate({marginLeft:0 + 'px'});
+            } else {
+                $(this).children().animate({left:319});
+                $('#map_aside').animate({marginLeft:0 + 'px'});
+                $("#map_container").animate({marginLeft:320});
+            }
+
+
+    });
+
+    //#. 기본정보 레이어팝업창 닫기
+    $(".info_layer.basic .layer_close").click(function(){
+        $(".info_layer.basic").hide();
+    });
+
+    //#. 상세정보 레이어팝업창 닫기
+    $(".info_layer.detail .layer_close").click(function(){
+        $(".info_layer.detail").hide();
+    });
+
+    //#. 상세정보 탭 선택시 해당 내용 보여주기
+    $(".info_layer.detail .info_tab li a").click(function(){
+        var contentName = $(this).attr('class');
+
+        $( ".info_layer.detail .info_content" ).each(function() {
+          $( this ).hide();
+        });
+
+        $( ".info_layer.detail .info_tab li" ).each(function() {
+          $( this ).removeClass('on');
+        });
+
+        $( this ).parent().addClass('on');
+        $("." + contentName).show();
+    });
+
+    //#. faq 게시판 탭 클릭시 해당 글내용 보여주기
+    $(".rent_tab").click(function(){
+        $(this).addClass('on');
+        $(".dealing_tab").removeClass('on');
+        $("#dealing_list").hide();
+        $("#rent_list").show();
+    });
+
+    $(".dealing_tab").click(function(){
+        $(this).addClass('on');
+        $(".rent_tab").removeClass('on');
+        $("#dealing_list").show();
+        $("#rent_list").hide();
+    });
+
+    //#. faq 게시판 리스트 클릭시 해당 글내용 보여주기
+    $(".faq_content_wrap .list li").click(function(){
+        $('.faq_content_wrap .list li').each(function(i, e){
+            $(this).removeClass('on');
+        });
+        $(this).addClass('on');
+    });
+
+    //#.20170923 메인페이지 추가
+    // #. 검색박스 탭 클릭
+    $(".main_search_tab li a").click(function(){
+        $( ".main_search_tab li" ).each(function() {
+          $( this ).removeClass('on');
+        });
+        $( "ul.main_search_content" ).each(function() {
+          $( this ).hide();
+        });
+        $('#' + $( this ).attr('class')).show();
+        $( this ).parent().addClass('on');
+    });
+
+    // #.게시판 탭 클릭
+    $(".main_board_tab li a").click(function(){
+         $( ".main_board_tab li button" ).each(function() {
+          $( this ).hide();
+         });
+        $( ".main_board_wrap li" ).each(function() {
+          $( this ).removeClass('on');
+        });
+        $( ".main_board_wrap ul.main_board_content" ).each(function() {
+          $( this ).hide();
+        });
+        $('#' + $( this ).attr('class')).show();
+        $('.' + $( this ).attr('class') + '_btn').show();
+        $( this ).parent().addClass('on');
+    });
+
+    //#. 하단 배너 실행
+    // #. 메인 하단 롤링 배너 실행 2017.09.25
+    $("#rollSlide").carouFredSel({
+        prev:{ button:".banPrev", key:"left" }
+        ,next:{ button:".banNext", key:"right" }
+        ,scroll:{ items:1,duration:500, pauseOnHover:"resume"}
+        ,items:{    visible:6 }
+    });
+    $(".banPlay").click(function() {
+        $('#rollSlide').trigger('play',true);
+        $('.banPlay').focus();
+    });
+    $(".banStop").click(function() {
+        $('#rollSlide').trigger('stop');
+        $('.banStop').focus();
+    });
+    
+ // 시군구별 거래신고사이트 
+	$('select[name=sidoCd]').change(function() {		
+		getSggCdCombo();
+	});
+});
+
+function getSggCdCombo() {
+	
+	var html 		= '';
+	var sidoCode 	= $('select[name=sidoCd] option:selected').val();		
+	
+	initSelectBox('sggCd');
+		
+	if(sidoCode != '') {
+		
+		$.ajax({
+ 			url:"/idx/getIdxGugunListAjax.do",
+ 			type:"post",
+ 			data:{sidoCode:sidoCode},
+ 			dataType:"json",
+ 			async:false,
+  		error : function(e) {
+    			alert("시군구 데이터 조회 중 오류가 발생했습니다.");      				
+  		},
+ 			success:function(result) {
+ 																
+				$(result.jsonList).each(function(index, data) {
+    			if(data != null) {	      						
+    				
+    				html += "<option value='" + data.SGG_CD + "'>" + data.SGG_NM + "</option>";
+    			}
+    		});
+				
+				$('select[name=sggCd]').append(html);
+							
+ 			}
+		}); 			
+	}
+}
+

@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<!-- saved from url=(0038)https://rt.molit.go.kr/new/idx/main.do -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
+	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	
+<title>국토교통부 실거래가 공개시스템</title>
+<link rel="stylesheet" href="./idx.css" type="text/css">
+
+<script src="./jquery-1.9.1.js.다운로드"></script>
+<script src="./jquery-ui.js.다운로드"></script>
+<script src="./idx.js.다운로드"></script>
+<script src="./util.js.다운로드"></script>
+<script src="./jquery.carouFredSel-6.2.1.js.다운로드"></script>   
+
+</head>
+<body>
+
+
+   
+<script>
+
+    var nscp = (navigator.appName == "Netscape");
+    var ismc = (navigator.appVersion.indexOf("Mac") != -1);
+    var vers = parseFloat(navigator.appVersion.substring(22,25));
+    
+    var agt = navigator.userAgent.toLowerCase();
+            
+    var menuLayer = "";
+    
+    $(document).ready(function() {
+    	
+//    	console.log(menuLayer);
+    	
+    	if(menuLayer == "A") { $('#Layer2').show(); }		// 아파트
+    	if(menuLayer == "B") { $('#Layer3').show(); }		// 다세대,연립
+    	if(menuLayer == "C") { $('#Layer4').show(); }		// 단독,다가구
+    	if(menuLayer == "E") { $('#Layer5').show(); }		// 오피스텔 : 토지변경분 6->5로 변경.
+    	if(menuLayer == "F") { $('#Layer6').show(); }		// 분양,입주권 : 토지변경분 7->6로 변경.
+    	if(menuLayer == "G") { $('#Layer7').show(); }		// 토지
+    	if(menuLayer == "H") { $('#Layer10').show(); }		// 상업/업무용
+    	
+    	if(agt.indexOf("trident") != -1) {
+    		$('#iechk').show();
+    	}
+    	else {
+    		$('#iechk').hide();
+    	}
+    });
+
+    function getObj(obj) {
+       if (nscp) {
+           compLayr = document.layers[obj];
+       }else{
+           compLayr = eval("document.all." + obj + ".style");
+       }
+       return compLayr;
+    }
+
+    function show(layr){       
+       $('#' + layr).show();
+    }
+
+    function hide(layr){       
+    	$('#' + layr).hide();
+    }
+
+    function menuRoll(which,status,total){
+       if (status){
+           currentMenuChoice = which;
+           //console.log(currentMenuChoice);
+           if(currentMenuChoice!=1 && currentMenuChoice!=9) show("Layer" + currentMenuChoice);
+           checkinfo(currentMenuChoice);
+       }
+    }
+ 
+    function checkinfo(currentMenuChoice){
+       for(var r=2;r<= 10;r++){		
+    	   
+           if(r != currentMenuChoice){
+	    	   //console.log(r + " | " + currentMenuChoice + " hide Layer " + r);
+               hide("Layer" + r);
+           }
+       }
+       if(currentMenuChoice==1 || currentMenuChoice==9){
+	       for(var r=2;r<= 10;r++){			
+	         hide("Layer" + r);
+	       }
+       } 
+    }
+
+	//여기의 tab_cnt는 이미지 메뉴의 수입니다.(롤오버되는 이미지만)
+	//그래서 메뉴의 갰수가 바뀌는 경우 꼭 바꾸어 주어야 합니다.(중요)
+	//안바꿔주면 에러납니다.
+	var tab_cnt = 10;				
+	
+	// 일반 이미지입니다. 원하는 메뉴 갯수만큼 만들어 주어야 합니다.
+	//이미지의 이름은 꼭 ../images/t_menu{순번}0.gif 형식이어야 합니다.
+	
+	// 순번은 1부터 시작하고요.
+	img_url = new Array();
+	img_url[0] = new Image();
+	img_url[1] = new Image();
+	img_url[2] = new Image();
+	img_url[3] = new Image();
+	img_url[4] = new Image();
+	img_url[5] = new Image();
+	img_url[6] = new Image();
+	img_url[7] = new Image();
+	img_url[8] = new Image();
+	img_url[9] = new Image();
+	img_url[0].src = "/images/t_menu10.gif";
+	img_url[1].src = "/images/t_menu20.gif";
+	img_url[2].src = "/images/t_menu30.gif";
+	img_url[3].src = "/images/t_menu40.gif";
+	img_url[4].src = "/images/t_menu60.gif";
+	img_url[5].src = "/images/t_menu70.gif";
+	img_url[6].src = "/images/t_menu50.gif";
+	img_url[7].src = "/images/t_menu80.gif";
+	img_url[8].src = "/images/t_menu90.gif";
+	
+	img_url[9].src = "/images/t_menu100.gif";	// 상업/업무용 이미지 들어가야함
+	
+	// 마우스 오버시의 이미지입니다. 원하는 메뉴 갯수만큼 만들어 주어야 합니다.
+	//이미지의 이름은 꼭 ../images/t_menu{순번}1.gif 형식이어야 합니다.
+	// 순번은 1부터 시작하고요.
+	img_a_url = new Array();
+	img_a_url[0] = new Image();
+	img_a_url[1] = new Image();
+	img_a_url[2] = new Image();
+	img_a_url[3] = new Image();
+	img_a_url[4] = new Image();
+	img_a_url[5] = new Image();
+	img_a_url[6] = new Image();
+	img_a_url[7] = new Image();
+	img_a_url[8] = new Image();
+	img_a_url[9] = new Image();
+	
+	img_a_url[0].src = "/images/t_menu11.gif";
+	img_a_url[1].src = "/images/t_menu21.gif";
+	img_a_url[2].src = "/images/t_menu31.gif";
+	img_a_url[3].src = "/images/t_menu41.gif";
+	img_a_url[4].src = "/images/t_menu61.gif";
+	img_a_url[5].src = "/images/t_menu71.gif";
+	img_a_url[6].src = "/images/t_menu51.gif";
+	img_a_url[7].src = "/images/t_menu81.gif";
+	img_a_url[8].src = "/images/t_menu91.gif";
+	
+	img_a_url[9].src = "/images/t_menu101.gif";	// 상업/업무용 이미지 들어가야함
+	
+	var menu_url = new Array();
+	menu_url[0] = "#"
+	menu_url[1] = "#"
+	menu_url[2] = "#"
+	menu_url[3] = "#"
+	menu_url[4] = "#"
+	menu_url[5] = "#"
+	menu_url[6] = "#"
+	menu_url[7] = "#"
+	menu_url[8] = "#"
+	menu_url[9] = "#"
+	
+	var menu_url = new Array();
+	menu_url[0] = "#"
+	menu_url[1] = "#"
+	menu_url[2] = "#"
+	menu_url[3] = "#"
+	menu_url[4] = "#"	
+	menu_url[5] = "#"
+	menu_url[6] = "#"
+	menu_url[7] = "#"
+	menu_url[8] = "#"
+	menu_url[9] = "#"
+	
+	//이부분이 마우스 오버시 처리하는 부분입니다.
+	//당근, 직접 이름을 프로그램안에 넣었기 때문에 이름을 같이 해 주어야 합니다.
+	// 이말은 tab10.gif 이 마우스 오버시 tab11.gif로 바뀌고 나머지는 전부
+	//원위치 하게 되는거죠(tab{순번}0.gif)
+	
+	function changetab (no) {
+	  for (i=1; i<= tab_cnt;i++){
+	    obj = eval("document.images.tab"+i);
+	    if (i == no){		  
+		  obj.src = img_a_url[i-1].src;		  
+	    }else{		  
+		  obj.src = img_url[i-1].src;
+		}
+	  }
+	}
+	
+</script>
+
+<div class="header">
+	<div class="top_wrap">
+		<div class="logo">
+			<a href="https://rt.molit.go.kr/new/idx/main.do"><img src="./header_ci.png" alt="실거래가 공개시스템"></a>
+		</div>
+		<div id="iechk" style="display: none;">
+			<span class="favorite"><a href="javascript:window.external.AddFavorite(&#39;http://rt.molit.go.kr/&#39;,&#39;국토교통부 실거래가 공개시스템&#39;);"><img src="./favorite_icn.png" alt="즐겨찾기"> 즐겨찾기 추가</a></span>
+		</div>
+	</div>
+	<div class="menu_nav_wrap">
+		<ul class="menu_nav">
+			<li class="public_t">
+				<a href="https://rt.molit.go.kr/new/vew/info.do">공개안내</a>
+			</li>
+			<li class="apart_t">
+				<a href="https://rt.molit.go.kr/new/gis/srh.do?menuGubun=A&amp;gubunCode=LAND">아파트</a>
+			</li>
+			<li class="generation_t">
+				<a href="https://rt.molit.go.kr/new/gis/srh.do?menuGubun=B&amp;gubunCode=LAND">연립/다세대</a>
+			</li>
+			<li class="familles_t">
+				<a href="https://rt.molit.go.kr/new/gis/srh.do?menuGubun=C&amp;gubunCode=LAND">단독/다가구</a>
+			</li>
+			<li class="office_t">
+				<a href="https://rt.molit.go.kr/new/gis/srh.do?menuGubun=E&amp;gubunCode=LAND">오피스텔</a>
+			</li>
+			<li class="divide_t">
+				<a href="https://rt.molit.go.kr/new/gis/srh.do?menuGubun=F&amp;gubunCode=LAND">분양/입주권</a>
+			</li>
+			<li class="business_t">
+				<a href="https://rt.molit.go.kr/new/gis/srh.do?menuGubun=H&amp;gubunCode=LAND">상업/업무용</a>
+			</li>
+			<li class="land_t">
+				<a href="https://rt.molit.go.kr/new/gis/srh.do?menuGubun=G&amp;gubunCode=LAND">토지</a>
+			</li>
+			<li class="board_t">
+				<a href="javascript: void(0);">게시판</a>
+				<div class="sub_nav_wrap">
+				</div>
+				<ul class="sub_nav">
+					<li>
+						<a href="https://rt.molit.go.kr/new/bbs/list.do">보도자료</a>
+					</li>
+					<li>
+						<a href="https://rt.molit.go.kr/new/bbs/faq.do">FAQ</a>
+					</li>
+				</ul> 
+			</li>
+			<li class="offer_t">
+				<a href="http://rtdown.molit.go.kr/" target="_blank">실거래가 자료제공 <img src="./offer_menu_icn.png" alt="자료제공"></a>
+			</li>
+			<li class="ori_t"> 
+				<a href="https://rt.molit.go.kr/pre.html" target="_blank" style="background-color: #223344;">(구)실거래가공개시스템</a>
+			</li>
+		</ul>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+<script>
+
+	//시군구별 거래 신고 사이트 링크
+	function siteLinkMove() {   
+  
+  		if($('select[name=sidoCd] option:selected').val() == "") {
+   			alert("시도가 선택되지 않았습니다.");
+    		return;
+		} 
+		
+		if($('select[name=sggCd] option:selected').val() == "") {
+			alert("시군구가 선택되지 않았습니다.");
+    		return;
+		} 
+		else {
+			var frm		= document.frm;
+			var sggCd 	= $('select[name=sggCd] option:selected').val();
+    		var popId 	= "_pop"+sggCd;
+    		
+	       	window.open('',popId,'');
+        	frm.target  = popId;
+        	frm.action 	= "/new/pop/link.do";
+        	frm.submit();
+//         	frm.target	= '_self';
+		}    
+	}
+	
+	function jsView(seqNo){
+    	var frm = document.bodoFrm;
+    	
+    	frm.seqNo.value = seqNo;
+    	frm.action = "/new/bbs/view.do"; 
+    	frm.submit();
+    }
+	
+	function fnGoBbs(gubun){
+		
+		var frm = document.bodoFrm;
+		
+		if(gubun=="1"){
+	    	frm.action = "/new/bbs/list.do"; 
+		}else if(gubun=="2"){
+	    	frm.action = "/new/bbs/faq.do"; 
+		}
+		
+    	frm.submit();
+	}
+	
+		
+</script>
+
+<form name="bodoFrm" method="post" action="https://rt.molit.go.kr/new/idx/main.do#" onsubmit="return false;">
+	<input type="hidden" name="seqNo" value="">
+	<input type="hidden" name="pageNo" value="1">
+	<input type="hidden" name="r_csrf" value="36f1e2dd-4d70-4441-b438-1356ded32332">
+</form>
+
+<form name="frm" action="https://rt.molit.go.kr/new/idx/main.do#" method="post" onsubmit="return false;">
+<input type="hidden" name="r_csrf" value="36f1e2dd-4d70-4441-b438-1356ded32332">
+
+<div class="container">
+			<!-- 내용부 상단 이미지 -->
+			<div class="top_main_img_wrap">
+				<p class="main_img_desc_txt"><img src="./public_main_top_txt.png" alt="쉽고 편리한 국토교통부 실거래가 공개시스템"></p>
+				<div class="top_main_img">
+<!-- 					<img src="/images/new/public_main_top.jpg" alt="내용부 상단 이미지"/> -->
+					<img src="./public_main_top_new.jpg" alt="내용부 상단 이미지"> 
+				</div>
+			</div>
+
+<div class="page mh0">
+		<div class="page_content">
+			<!-- 검색 박스 -->
+			<div class="main_left_box">
+				<!-- 게시판 -->
+				<div class="main_board_wrap">
+					<ul class="main_board_tab">
+						<li class="on"><a class="bodo_list">보도자료</a></li>
+						<li class=""><a class="faq_list">FAQ</a></li>
+						<li class="tab_btn">
+							<button class="bodo_list_btn" onclick="fnGoBbs(&#39;1&#39;);" style="display: inline-block;"><img src="./main_board_more_btn.png" alt="더보기"></button>
+							<button class="faq_list_btn" onclick="fnGoBbs(&#39;2&#39;);" style="display: none;"><img src="./main_board_more_btn.png" alt="더보기"></button>
+						</li>
+					</ul>
+					<ul class="main_board_content" id="bodo_list" style="display: block;">
+								
+							<li>
+								<a href="javascript:jsView(&#39;402&#39;);">정부-지자체 맞손, 부동산 실거래 공개정보 일원화..</a> 
+								<span>2019-06-11</span>
+							</li>			
+								
+							<li>
+								<a href="javascript:jsView(&#39;400&#39;);">전국 4월 매매거래량은 5.7만 건, 전월세 거래량은 16.2만..</a> 
+								<span>2019-06-11</span>
+							</li>			
+								
+							<li>
+								<a href="javascript:jsView(&#39;399&#39;);">전국 3월 매매거래량은 5.1만 건, 전월세거래량은 17.7만 ..</a> 
+								<span>2019-04-23</span>
+							</li>			
+								
+							<li>
+								<a href="javascript:jsView(&#39;394&#39;);">19.2월 주택 매매거래량은 전국 4.3만건으로 전년동월 대비 ..</a> 
+								<span>2019-03-20</span>
+							</li>			
+								
+							<li>
+								<a href="javascript:jsView(&#39;393&#39;);">19.1월 주택 매매거래량은 전국 5.0만건으로 전년동월 대비 ..</a> 
+								<span>2019-03-20</span>
+							</li>			
+						
+					</ul>
+					<ul class="main_board_content" id="faq_list" style="display: none;">
+						<li>
+							<a href="https://rt.molit.go.kr/new/bbs/faq.do">실거래가 자료 공개 근거는?</a>
+							<span>[매매]</span>
+						</li>
+						<li>
+							<a href="https://rt.molit.go.kr/new/bbs/faq.do">실거래가 공개대상 및 공개내용은 어떻게 되나요?</a>
+							<span>[매매]</span>
+						</li>
+						<li>
+							<a href="https://rt.molit.go.kr/new/bbs/faq.do">계약일자와 신고일자의 차이는 무엇이며 자료제공시점은 언제인가요?</a>
+							<span>[매매]</span>
+						</li>
+						<li>
+							<a href="https://rt.molit.go.kr/new/bbs/faq.do">전월세 거래정보시스템 운영에 활용하는 확정일자는 무엇인지요?</a>
+							<span>[전월세]</span>
+						</li>
+						<li>
+							<a href="https://rt.molit.go.kr/new/bbs/faq.do">전월세 계약을 갱신하는 경우에도 가격 파악이 가능한지요?</a>
+							<span>[전월세]</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="main_right_box">
+				<!-- 그래프 -->
+				<div class="graph_bg_wrap">
+					<div class="graph_bg">
+						<h2>주택 매매거래량 추이</h2>
+						<div><img src="./graph_01.png" alt="매매거래량 그래프"></div>
+					</div>
+					<div class="graph_bg">
+						<h2>주택 전월세거래량 추이</h2>
+						<div><img src="./graph_02.png" alt="전월세거래량 그래프"></div>
+					</div>
+				</div>
+			</div>
+			<div class="main_left_box mt20">
+				<!-- 배너 -->
+				<div class="banner_wrap">
+					<div class="banner">
+						<a href="http://rtdown.molit.go.kr/" target="_blank">
+							<img src="./main_banner1.png" alt="실거래가 자료제공">
+							<div class="desc_layer"> 
+								<h2>실거래가 자료제공</h2>
+								<p>
+									실거래가 공개시스템의 자료를<br>
+									다운로드 받으실 수 있습니다.
+								</p>
+							</div>
+						</a>
+					</div>
+					<div class="banner">
+						<a href="https://rt.molit.go.kr/new/app/app.do">
+							<img src="./main_banner2.png" alt="실거래가 공개시스템 APP">
+							<div class="desc_layer">
+								<h2>실거래가 공개시스템 APP</h2>
+								<p>
+									스마트폰에 설치하시면<br>
+									정보를 손쉽게 확인 할 수 있습니다.
+								</p>
+							</div>
+						</a>
+					</div>
+				</div>
+				<!-- 콜센터 전화상담-->
+				<div class="call_center">
+					<table>
+						<tbody><tr>
+							<td style="width:15%; height:64px; text-align:center; ">
+								<span style="font-size:14px; font-weight:600; color:#00ffff; text-align:center;"> 콜센터 <br>전화상담 </span>
+							</td>
+							<td style="width:50%;">
+								<span style="font-size:12px; line-height:17px; color:#e0e0e0; text-align:center;">운영시간 : 평일 09:00 ~ 18:00<br>(점심시간 12:00~13:00, 주말 및 공휴일 휴무)</span>
+							</td>
+							<td>
+								<img src="./main_call_number.png" alt="콜센터">
+							</td>
+						</tr>
+					</tbody></table>	
+				</div>
+			</div>
+			<div class="main_right_box mt20">
+				<div class="etc_wrap">
+					<!-- 시군구별 거래신고사이트 -->
+					<div class="etc_site">
+						<h2><label for="s_sidoCd">시군구별 거래신고사이트</label></h2>
+						<div>
+							<select id="s_sidoCd" name="sidoCd">
+								<option value="">시도선택</option>
+								
+									<option value="11">서울특별시</option>
+								
+									<option value="26">부산광역시</option>
+								
+									<option value="27">대구광역시</option>
+								
+									<option value="28">인천광역시</option>
+								
+									<option value="29">광주광역시</option>
+								
+									<option value="30">대전광역시</option>
+								
+									<option value="31">울산광역시</option>
+								
+									<option value="36">세종특별자치시</option>
+								
+									<option value="41">경기도</option>
+								
+									<option value="42">강원도</option>
+								
+									<option value="43">충청북도</option>
+								
+									<option value="44">충청남도</option>
+								
+									<option value="45">전라북도</option>
+								
+									<option value="46">전라남도</option>
+								
+									<option value="47">경상북도</option>
+								
+									<option value="48">경상남도</option>
+								
+									<option value="50">제주특별자치도</option>
+																							
+							</select>
+						</div>
+						<div>
+							<label for="s_sggCd"></label>
+							<select id="s_sggCd" name="sggCd">
+								<option value="">시군구선택</option>
+							</select>
+						</div>
+						<div>
+							<button onclick="javascript:siteLinkMove();">사이트 바로가기</button>
+						</div>
+					</div>
+					<!-- 콜센터 전화상담-->
+					<div>
+						<a href="http://www.kab.co.kr/kab/home/customer/pricereportGuide.jsp" target="_blank"><img src="./main_banner3.gif" alt="집값담합"></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="rollBanner">
+			<div class="banner_comp_icn">
+				<span>배너<br>모음</span>
+				<button class="banPrev" style="display: inline-block;"><img src="./banner_prev.jpg" alt="배너"></button>
+				<button class="banPlay"><img src="./banner_play.jpg" alt="배너"></button>
+				<button class="banStop"><img src="./banner_stop.jpg" alt="배너"></button>
+				<button class="banNext" style="display: inline-block;"><img src="./banner_next.jpg" alt="배너"></button>
+			</div>
+			<div class="caroufredsel_wrapper" style="display: block; text-align: start; float: none; position: relative; top: auto; right: auto; bottom: auto; left: auto; z-index: auto; width: 930px; height: 40px; margin: 0px; overflow: hidden;"><ul id="rollSlide" style="text-align: left; float: none; position: absolute; top: 0px; right: auto; bottom: auto; left: 0px; margin: 0px; width: 3720px; height: 40px; z-index: auto;">
+				
+				
+				<!-- <li><a href="http://www.r-one.co.kr/" target="_blank"><img src="/images/new/banner/adbanner_004.jpg" alt="부동산통계정보시스템"/></a></li> --> 
+				
+				
+				
+				
+				
+				
+				
+			<li><a href="http://www.nts.go.kr/" target="_blank"><img src="./adbanner_008.jpg" alt="국세청"></a></li><li><a href="http://www.wetax.go.kr/" target="_blank"><img src="./adbanner_009.jpg" alt="위택스"></a></li><li><a href="http://www.iros.go.kr/" target="_blank"><img src="./adbanner_010.jpg" alt="인터넷등기소"></a></li><li><a href="http://www.molit.go.kr/portal.do" target="_blank"><img src="./adbanner_001.jpg" alt="국토교통부"></a></li><li><a href="http://www.facebook.com/landkorea" target="_blank"><img src="./adbanner_002.jpg" alt="국토교통부 공식 페이스북"></a></li><li><a href="https://seereal.lh.or.kr/" target="_blank"><img src="./adbanner_003.jpg" alt="부동산 정보 통합포털"></a></li><li><a href="http://kras.go.kr/" target="_blank"><img src="./adbanner_005.jpg" alt="부동산통합민원"></a></li><li><a href="http://www.minwon.go.kr/" target="_blank"><img src="./adbanner_006.jpg" alt="민원24"></a></li><li><a href="http://www.kab.co.kr/" target="_blank"><img src="./adbanner_007.jpg" alt="한국감정원"></a></li></ul></div>
+		</div>
+	</div>
+	
+</div> <!-- container -->
+</form>
+
+
+<!-- footer -->
+<div class="main_page_footer mt0">
+			<div class="footer_content">
+				<div class="f_mi_logo">
+					<img src="./main_footer_mi.png" alt="국토교통부">
+				</div>
+				<div class="info_txt">30064 세종특별자치시 도움 6로 11 국토교통부 토지정책과 <br>Copyright (c) Ministry of Land, Infrastructure and Transport. All Rights reserved.</div>
+				<!-- 방문자수 -->
+				<div class="visit_wrap">
+										
+						<p><span class="visit_tit">금일방문자수 :</span><span class="total_num">37,812</span></p>
+						<p><span class="visit_tit">전체방문자수 :</span><span class="total_num">128,971,903</span></p>
+					
+				</div>
+			</div>
+		</div>
+
+<!-- </div> wrap		 -->
+
+
+
+
+<!-- 	<table width="100%" height="100%"> -->
+<!-- 		<tr>			 -->
+<!-- 			<td width="100%" height="104" valign="top"> -->
+
+<!-- 			</td>			 -->
+<!-- 		</tr> -->
+<!-- 		<tr> -->
+<!-- 			<td width="100%" height="100%" valign="top" class="main_bg"> -->
+
+<!-- 			</td> -->
+<!-- 		</tr> -->
+<!-- 		<tr> -->
+<!-- 			<td width="100%" valign="bottom" height="45"> -->
+
+<!-- 			</td> -->
+<!-- 		</tr> -->
+<!-- 		<tr>			 -->
+<!-- 			<td width="100%" height="56" valign="bottom"> -->
+
+<!-- 			</td>			 -->
+<!-- 		</tr>	 -->
+<!-- 	</table>	 -->
+
+</body></html>

@@ -1,0 +1,59 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+ul {
+	list-style: none;
+}
+
+.clearfix:after {
+	content: '';
+	display: block;
+	clear: both;
+	float: none;
+}
+
+.left_menu {
+	float: left;
+	width: 200px;
+}
+
+.left_menu h2 {
+	widows: 200px;
+	height: 150px;
+	text-align: center;
+	font: bold 50px/150px "굴림";
+	background-color: #9f9;
+}
+
+.content {
+	float: left;
+	padding: 40px;
+}
+
+ul.menu_list li {
+	padding: 10px;
+	background: url(../img/list_right.png) repeat-y right top;
+}
+
+ul.menu_list a {
+	display: block;
+	width: auto;
+	height: 25px;
+}
+
+ul.nav_list li {
+	width: 40px;
+    display: inline-block;
+    text-align: center;
+}
+
+.content h3 {
+	font: bold 40px/60px "굴림";
+}
+
+.graph_box img {
+	width: 600px;
+	height: 500px;
+}

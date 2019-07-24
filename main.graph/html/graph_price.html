@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>	
+		<meta charset="utf-8"/>	
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />	
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="../css/graph_price.css">
+        <title>ASH</title>
+	</head>
+    <body>
+		<div class="container">
+			<div class="left_menu">
+				<h2>통계</h2>
+				<ul class="menu_list">
+					<li><a href="#">가격</a></li>
+					<li><a href="graph_volume.html">거래량</a></li>
+				</ul>
+			</div>
+			<div class="content">
+				<h3>가격</h3>
+				<ul class="nav_list">
+					<li><img src="../img/icon_home.png" alt="home"></li>
+					<li>통계</li>
+					<li>가격</li>
+				</ul>
+				<form action="#" method="get">
+					<fieldset>
+						<legend>선택사항</legend>
+						<div class="area">
+							<select name="state">
+								<option value="">-- 도 선택 --</option>
+							</select>
+							<select name="city">
+								<option value="">-- 시/군구 선택 --</option>
+							</select>
+							<select name="dong">
+								<option value="">-- 동 선택 --</option>
+							</select>
+						</div>
+						<select name="area">
+							<option value="">-- 평수 --</option>
+							<option value="10">10평</option>
+							<option value="20">20평</option>
+							<option value="30">30평</option>
+							<option value="40">40평</option>
+							<option value="50">50평</option>
+							<option value="60">60평 이상</option>
+						</select>
+						<select name="type">
+							<option value="">-- 주거 형태 --</option>
+							<option value="apt">아파트</option>
+							<option value="alliance">연립다세대</option>
+							<option value="solo">단독/다가구</option>
+						</select>
+						<input type="submit" value="조회" />
+						<input type="reset" value="리셋" />
+					</fieldset>
+				</form>
+				<div class="graph_box">
+					<img src="../img/graph_python.jpg" alt="graph" />
+				</div>
+			</div>
+		</div>
+    </body>
+</html>

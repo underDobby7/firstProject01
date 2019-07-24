@@ -1,0 +1,71 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+ul {
+	list-style: none;
+}
+
+.clearfix:after {
+	content: '';
+	display: block;
+	clear: both;
+	float: none;
+}
+
+div.container {
+	margin: auto;
+	width: 1000px;
+	height: 600px;
+}
+
+div.main_img {
+	margin: auto;
+	width: 800px;
+	height: 400px;
+}
+
+div.main_img > img {
+	width: 800px;
+	height: 400px;
+}
+
+.main_left_box h2 {
+	float: left;
+}
+
+.main_left_box img {
+	float: right;
+}
+
+.main_left_box {
+	float: left;
+	width: 500px;
+}
+
+.main_board_content a {
+    text-decoration: none;
+    color: #222;
+    font: 14px "굴림";
+    margin-right: 30px;
+}
+
+.main_board_content li {
+    margin-top: 10px;
+    width: 500px;
+}
+
+.bottom_content {
+	margin: 30px;
+}
+
+.main_right_box {
+	float: left;
+	width: 350px;
+	margin-left: 50px;
+}
+
+.main_right_box img{
+	width: 350px;
+}
